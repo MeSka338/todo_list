@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo</title>
+    <link rel="stylesheet" href="./styles/main.css" />
+  </head>
+  <body>
+    <section class="todoApp">
+      <h1 class="title">todos</h1>
+
+      <div class="todos">
+        <form action="" class="todo-form">
+          <input
+            type="text"
+            placeholder="What need to be done?"
+            class="todos__input"
+            id="todosInput"
+            required
+          />
+        </form>
+        <ul class="todos__list" id="taskList"></ul>
+        <div class="todos__menu">
+          <p class="todos-count" id="counter">0 items</p>
+          <div class="todos-pages">
+            <button class="page" id="All">ALL</button>
+            <button class="page" id="Active">Active</button>
+            <button class="page" id="Complited">Complited</button>
+          </div>
+          <button class="clear-todos page" id="clearChecked">
+            Clear complited
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <script src="/js/app.js"></script>
+  </body>
+</html>
