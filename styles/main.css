@@ -100,9 +100,27 @@ body {
   padding: 16px 16px 16px 60px;
   color: gray;
 }
+.todo-form {
+  position: relative;
+}
+.todo-form__sellectAll {
+  margin-left: 15px;
+
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  transform: translateY(-50%);
+  background: url("/publick/icons/arrow_drop_down_FILL0_wght400_GRAD0_opsz48.svg");
+}
 
 .todo-item__remove {
   background: url("/publick/icons/close_FILL0_wght400_GRAD0_opsz48.svg");
+}
+.todo-item__edit {
+  background: url("/publick/icons/edit_FILL0_wght400_GRAD0_opsz48.svg");
+}
+
+.button {
   background-size: cover;
   border: none;
   cursor: pointer;
@@ -111,6 +129,7 @@ body {
 
   margin-right: 15px;
 }
+
 .todo-item__change {
   max-width: 450px;
   width: 100%;

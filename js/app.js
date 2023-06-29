@@ -4,7 +4,7 @@ const taskList = document.querySelector("#taskList");
 const counter = document.querySelector("#counter");
 const clearChecked = document.querySelector("#clearChecked");
 const todosPages = document.querySelector(".todos-pages");
-const editTodo = document.querySelector("#editTodo");
+const sellectAll = document.querySelector("#sellectAll");
 
 let tasks = [];
 
@@ -16,37 +16,43 @@ if (localStorage.getItem("tasks")) {
   });
 }
 
+if (localStorage.getItem("doneMode")) {
+  doneMode = localStorage.getItem("doneMode");
+}
+
 todosPages.addEventListener("click", filter);
 form.addEventListener("submit", addTask);
 taskList.addEventListener("click", deleteTask);
 taskList.addEventListener("click", doneTask);
-window.addEventListener("dblclick", (e) => {
-  if (e.target.id == "taskText") {
-    const Id = e.target.closest(".todo-item").id;
-    tasks.forEach((task) => {
-      if ((task.id = Id)) {
-        task.edit = !task.edit;
-      }
-    });
-  }
-
-  saveLocal();
-});
-
+taskList.addEventListener("click", editTask);
 clearChecked.addEventListener("click", removeChecked);
+sellectAll.addEventListener("click", doneAllToggle);
+
+function editTask(e) {
+  if (e.target.classList == "todo-item__edit button") {
+    const Parant = e.target.closest(".todo-item");
+    const Id = Parant.id;
+    const Text = Parant.querySelector(".todo-item__value");
+    const task = tasks.find((task) => task.id == Id);
+    task.edit = !task.edit;
+    task.text = Text.value;
+    saveLocal();
+    Text.toggleAttribute("readonly");
+
+    console.log(e);
+  }
+}
 
 function filter(e) {
   switch (e.target.id) {
     case "Active":
       tasks.forEach((task) => {
         taskList.querySelector(`#${task.id}`).style.display = "flex";
-
         if (task.checked) {
           taskList.querySelector(`#${task.id}`).style.display = "none";
         }
       });
       break;
-
     case "Complited":
       tasks.forEach((task) => {
         taskList.querySelector(`#${task.id}`).style.display = "flex";
@@ -85,9 +91,9 @@ function addTask(e) {
 }
 
 function render(task) {
-  let taskText = task.text;
+  const taskText = task.text;
   const textCss = task.checked
-    ? "todo-item__value todo-item__value--checked"
+    ? `"todo-item__value--checked todo-item__value"`
     : "todo-item__value";
   const Task = `<li class="todo-item" id="${task.id}">
         <input
@@ -98,17 +104,17 @@ function render(task) {
           ${task.checked ? "checked" : ""}
         />
         <label for=${"checked" + task.id} class="fake-checked"></label>
-        <input type="text" ${
-          task.edit ? "" : "readonly"
-        } class=${textCss} id="taskText" value="${taskText}"> </input>
-        <button class="todo-item__remove" id="removeBtn"></button>
+
+        <input type="text" class=${textCss}  readonly id="taskText" value="${taskText}"> </input>
+        <button class="todo-item__remove button"></button>
+        <button class="todo-item__edit button"></button>
       </li>`;
 
   taskList.insertAdjacentHTML("afterbegin", Task);
 }
 
 function deleteTask(e) {
-  if (e.target.id == "removeBtn") {
+  if (e.target.classList == "todo-item__remove button") {
     const Item = e.target.closest(".todo-item");
     const Id = Item.id;
 
@@ -148,3 +154,21 @@ function removeChecked() {
 
   saveLocal();
 }
+
+// function doneAllToggle() {
+//   tasks.forEach((task) => {
+//     if (task.checked !== doneMode) {
+//       const Task = taskList.querySelector(`#${task.id}`);
+
+//       Task.querySelector(".todo-item__value").classList.toggle(
+//         "todo-item__value--checked"
+//       );
+//       Task.querySelector(".todo-item__checked").toggleAttribute("checked");
+
+//       task.checked = doneMode;
+//     }
+//   });
+//   doneMode = !doneMode;
+//   localStorage.setItem("doneMode", doneMode);
+//   saveLocal();
+// }
