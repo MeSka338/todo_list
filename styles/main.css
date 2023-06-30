@@ -36,6 +36,12 @@ body {
   border: none;
 }
 
+.todos__input:focus {
+  outline: none;
+  border: 2px solid #ecd4d4;
+  border-radius: 2px;
+}
+
 .todos__input::placeholder {
   color: #ebdcdc;
 }
@@ -61,7 +67,7 @@ body {
   width: 30px;
   height: 30px;
 
-  border: 1px solid black;
+  border: 1px solid #ecd4d4;
   border-radius: 50%;
 
   cursor: pointer;
@@ -69,8 +75,8 @@ body {
 
 .fake-checked:after {
   content: "";
-  border-bottom: 2px solid black;
-  border-left: 2px solid black;
+  border-bottom: 2px solid #5dc2af;
+  border-left: 2px solid #5dc2af;
   transform: rotate(-45deg) translate(-5%, 100%);
   width: 14px;
   height: 7px;
@@ -86,19 +92,22 @@ body {
 
 .todo-item__value {
   border: none;
-  max-width: 500px;
+  max-width: 460px;
   width: 100%;
   font-size: 20px;
   padding: 16px 16px 16px 60px;
+  word-wrap: break-word;
+}
+
+.todo-item__value:focus {
+  outline: none;
+  border: 1px solid #5dc2af;
 }
 
 .todo-item__value--checked {
   text-decoration: line-through;
-  max-width: 500px;
-  width: 100%;
-  font-size: 20px;
-  padding: 16px 16px 16px 60px;
   color: gray;
+  transition: color ease-out 0.4s;
 }
 .todo-form {
   position: relative;
@@ -113,11 +122,28 @@ body {
   background: url("/publick/icons/arrow_drop_down_FILL0_wght400_GRAD0_opsz48.svg");
 }
 
-.todo-item__remove {
-  background: url("/publick/icons/close_FILL0_wght400_GRAD0_opsz48.svg");
+.todo-item__remove img {
+  background: white;
+  width: 100%;
+  height: 100%;
+
+  pointer-events: none;
+
+  /* background: url("/publick/icons/close_FILL0_wght400_GRAD0_opsz48.svg"); */
 }
-.todo-item__edit {
-  background: url("/publick/icons/edit_FILL0_wght400_GRAD0_opsz48.svg");
+
+.todo-item__edit img {
+  background: white;
+  width: 100%;
+  height: 100%;
+
+  pointer-events: none;
+
+  /* background: url("/publick/icons/edit_FILL0_wght400_GRAD0_opsz48.svg"); */
+}
+
+.todo-item__save {
+  background: url("/publick/icons/save_FILL0_wght400_GRAD0_opsz48.svg");
 }
 
 .button {

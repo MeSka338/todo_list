@@ -1,24 +1,13 @@
 const Input = document.querySelector("#todosInput");
-const form = document.querySelector(".todo-form");
+const form = document.querySelector("#form");
 const taskList = document.querySelector("#taskList");
 const counter = document.querySelector("#counter");
 const clearChecked = document.querySelector("#clearChecked");
-const todosPages = document.querySelector(".todos-pages");
+const todosPages = document.querySelector("#todoPages");
 const sellectAll = document.querySelector("#sellectAll");
 
 let tasks = [];
-
-if (localStorage.getItem("tasks")) {
-  tasks = JSON.parse(localStorage.getItem("tasks"));
-
-  tasks.forEach((task) => {
-    render(task);
-  });
-}
-
-if (localStorage.getItem("doneMode")) {
-  doneMode = localStorage.getItem("doneMode");
-}
+let taskCount;
 
 todosPages.addEventListener("click", filter);
 form.addEventListener("submit", addTask);
@@ -26,7 +15,15 @@ taskList.addEventListener("click", deleteTask);
 taskList.addEventListener("click", doneTask);
 taskList.addEventListener("click", editTask);
 clearChecked.addEventListener("click", removeChecked);
-sellectAll.addEventListener("click", doneAllToggle);
+
+if (localStorage.getItem("tasks")) {
+  tasks = JSON.parse(localStorage.getItem("tasks"));
+  counter.textContent = `${tasks.length + " items"}`;
+
+  tasks.forEach((task) => {
+    render(task);
+  });
+}
 
 function editTask(e) {
   if (e.target.classList == "todo-item__edit button") {
@@ -35,38 +32,46 @@ function editTask(e) {
     const Text = Parant.querySelector(".todo-item__value");
     const task = tasks.find((task) => task.id == Id);
     task.edit = !task.edit;
-    task.text = Text.value;
+    task.text = Text.textContent;
     saveLocal();
-    Text.toggleAttribute("readonly");
-
-    console.log(e);
+    rerender();
   }
 }
 
 function filter(e) {
+  while ((lis = taskList.getElementsByTagName("li")).length > 0) {
+    taskList.removeChild(lis[0]);
+  }
   switch (e.target.id) {
     case "Active":
       tasks.forEach((task) => {
-        taskList.querySelector(`#${task.id}`).style.display = "flex";
-        if (task.checked) {
-          taskList.querySelector(`#${task.id}`).style.display = "none";
+        if (!task.checked) {
+          render(task);
         }
       });
       break;
     case "Complited":
       tasks.forEach((task) => {
-        taskList.querySelector(`#${task.id}`).style.display = "flex";
-        if (!task.checked) {
-          taskList.querySelector(`#${task.id}`).style.display = "none";
+        if (task.checked) {
+          render(task);
         }
       });
       break;
     default:
       tasks.forEach((task) => {
-        taskList.querySelector(`#${task.id}`).style.display = "flex";
+        render(task);
       });
       break;
   }
+}
+
+function rerender() {
+  while ((lis = taskList.getElementsByTagName("li")).length > 0) {
+    taskList.removeChild(lis[0]);
+  }
+  tasks.forEach((task) => {
+    render(task);
+  });
 }
 
 function addTask(e) {
@@ -86,7 +91,6 @@ function addTask(e) {
   console.log(tasks);
 
   Input.value = "";
-
   counter.textContent = `${tasks.length + " items"}`;
 }
 
@@ -95,6 +99,7 @@ function render(task) {
   const textCss = task.checked
     ? `"todo-item__value--checked todo-item__value"`
     : "todo-item__value";
+
   const Task = `<li class="todo-item" id="${task.id}">
         <input
           type="checkbox"
@@ -103,11 +108,17 @@ function render(task) {
           id=${"checked" + task.id}
           ${task.checked ? "checked" : ""}
         />
-        <label for=${"checked" + task.id} class="fake-checked"></label>
+        <label for=${"checked" + task.id}  class="fake-checked"></label>
+        <p class=${textCss} contenteditable="${
+    task.edit ? "true" : "false"
+  }">${taskText}</p>
+        <button class="todo-item__remove button">
+          <img src="/publick/icons/close_FILL0_wght400_GRAD0_opsz48.svg" alt="rem"></img>
+        </button>
+        <button class="todo-item__edit button">
+        <img src="/publick/icons/edit_FILL0_wght400_GRAD0_opsz48.svg" alt="rem"></img>
 
-        <input type="text" class=${textCss}  readonly id="taskText" value="${taskText}"> </input>
-        <button class="todo-item__remove button"></button>
-        <button class="todo-item__edit button"></button>
+        </button>
       </li>`;
 
   taskList.insertAdjacentHTML("afterbegin", Task);
@@ -122,6 +133,7 @@ function deleteTask(e) {
     saveLocal();
 
     Item.remove();
+    counter.textContent = `${tasks.length + " items"}`;
   }
 }
 
@@ -153,22 +165,5 @@ function removeChecked() {
   });
 
   saveLocal();
+  counter.textContent = `${tasks.length + " items"}`;
 }
-
-// function doneAllToggle() {
-//   tasks.forEach((task) => {
-//     if (task.checked !== doneMode) {
-//       const Task = taskList.querySelector(`#${task.id}`);
-
-//       Task.querySelector(".todo-item__value").classList.toggle(
-//         "todo-item__value--checked"
-//       );
-//       Task.querySelector(".todo-item__checked").toggleAttribute("checked");
-
-//       task.checked = doneMode;
-//     }
-//   });
-//   doneMode = !doneMode;
-//   localStorage.setItem("doneMode", doneMode);
-//   saveLocal();
-// }
