@@ -8,6 +8,7 @@ const sellectAll = document.querySelector("#sellectAll");
 
 let tasks = [];
 let taskCount;
+let filterMode = 1;
 
 todosPages.addEventListener("click", filter);
 form.addEventListener("submit", addTask);
@@ -31,26 +32,43 @@ function editTask(e) {
     const Id = Parant.id;
     const Text = Parant.querySelector(".todo-item__value");
     const task = tasks.find((task) => task.id == Id);
+
     task.edit = !task.edit;
     task.text = Text.textContent;
+
     saveLocal();
-    rerender();
+    update();
   }
 }
 
 function filter(e) {
+  switch (e.target.id) {
+    case "Active":
+      filterMode = 2;
+      break;
+    case "Complited":
+      filterMode = 3;
+      break;
+    default:
+      filterMode = 1;
+      break;
+  }
+  update();
+}
+
+function update() {
   while ((lis = taskList.getElementsByTagName("li")).length > 0) {
     taskList.removeChild(lis[0]);
   }
-  switch (e.target.id) {
-    case "Active":
+  switch (filterMode) {
+    case 2:
       tasks.forEach((task) => {
         if (!task.checked) {
           render(task);
         }
       });
       break;
-    case "Complited":
+    case 3:
       tasks.forEach((task) => {
         if (task.checked) {
           render(task);
@@ -65,37 +83,37 @@ function filter(e) {
   }
 }
 
-function rerender() {
-  while ((lis = taskList.getElementsByTagName("li")).length > 0) {
-    taskList.removeChild(lis[0]);
-  }
-  tasks.forEach((task) => {
-    render(task);
-  });
-}
-
 function addTask(e) {
   e.preventDefault();
 
   const textValue = Input.value;
+
   const newTask = {
     text: textValue,
     checked: false,
     edit: false,
     id: "id" + Date.now(),
   };
-  tasks.push(newTask);
-  render(newTask);
-  saveLocal();
 
-  console.log(tasks);
+  tasks.push(newTask);
+
+  if (filterMode === 1 || filterMode === 2) {
+    render(newTask);
+  }
+
+  saveLocal();
 
   Input.value = "";
   counter.textContent = `${tasks.length + " items"}`;
 }
 
 function render(task) {
+  const taskEdit = task.edit
+    ? "save_FILL0_wght400_GRAD0_opsz48"
+    : "edit_FILL0_wght400_GRAD0_opsz48";
+
   const taskText = task.text;
+
   const textCss = task.checked
     ? `"todo-item__value--checked todo-item__value"`
     : "todo-item__value";
@@ -116,8 +134,7 @@ function render(task) {
           <img src="/publick/icons/close_FILL0_wght400_GRAD0_opsz48.svg" alt="rem"></img>
         </button>
         <button class="todo-item__edit button">
-        <img src="/publick/icons/edit_FILL0_wght400_GRAD0_opsz48.svg" alt="rem"></img>
-
+          <img src="/publick/icons/${taskEdit}.svg" alt="rem"></img>
         </button>
       </li>`;
 
@@ -142,13 +159,11 @@ function doneTask(e) {
     const Item = e.target.closest(".todo-item");
     const Id = Item.id;
     const Task = tasks.find((task) => task.id == Id);
+
     Task.checked = !Task.checked;
+
     saveLocal();
-
-    console.log(Task);
-
-    const textItem = Item.querySelector(".todo-item__value");
-    textItem.classList.toggle("todo-item__value--checked");
+    update();
   }
 }
 
