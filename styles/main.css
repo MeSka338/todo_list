@@ -9,12 +9,14 @@ body {
   font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
   background-color: #f5f5f5;
 }
+
 .todoApp {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 0 20px;
 }
+
 .todos {
   max-width: 550px;
   width: 100%;
@@ -106,20 +108,32 @@ body {
 
 .todo-item__value--checked {
   text-decoration: line-through;
-  color: gray;
+  color: #5dc2af;
   transition: color ease-out 0.4s;
 }
+
 .todo-form {
   position: relative;
 }
-.todo-form__sellectAll {
-  margin-left: 15px;
 
+.todo-form__sellectAll {
+  width: 30px;
+  margin-left: 15px;
+  border: none;
+  background: white;
   position: absolute;
   z-index: 2;
   top: 50%;
   transform: translateY(-50%);
-  background: url("/publick/icons/arrow_drop_down_FILL0_wght400_GRAD0_opsz48.svg");
+  cursor: pointer;
+}
+
+.todo-form__sellectAll img {
+  background: white;
+  width: 100%;
+  height: 100%;
+
+  pointer-events: none;
 }
 
 .todo-item__remove img {
@@ -128,8 +142,6 @@ body {
   height: 100%;
 
   pointer-events: none;
-
-  /* background: url("/publick/icons/close_FILL0_wght400_GRAD0_opsz48.svg"); */
 }
 
 .todo-item__edit img {
@@ -138,12 +150,6 @@ body {
   height: 100%;
 
   pointer-events: none;
-
-  /* background: url("/publick/icons/edit_FILL0_wght400_GRAD0_opsz48.svg"); */
-}
-
-.todo-item__save {
-  background: url("/publick/icons/save_FILL0_wght400_GRAD0_opsz48.svg");
 }
 
 .button {
@@ -165,6 +171,7 @@ body {
   font-size: 20px;
   border: none;
 }
+
 .todos__menu {
   display: flex;
   justify-content: space-between;
@@ -179,7 +186,18 @@ body {
   padding: 5px;
   background: white;
   border: none;
+
+  cursor: pointer;
 }
+
 .page:hover {
+  background: #ebdcdc;
+}
+
+.page:active {
+  background: #5dc2af;
+}
+
+.page--active {
   background: #ebdcdc;
 }

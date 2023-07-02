@@ -1,3 +1,4 @@
+// VARIABLES
 const Input = document.querySelector("#todosInput");
 const form = document.querySelector("#form");
 const taskList = document.querySelector("#taskList");
@@ -6,83 +7,72 @@ const clearChecked = document.querySelector("#clearChecked");
 const todosPages = document.querySelector("#todoPages");
 const sellectAll = document.querySelector("#sellectAll");
 
-let tasks = [];
-let taskCount;
-let filterMode = 1;
+let tasks = []; // the list of tasks
+let taskCount; // for displayng the quantity of tasks in the list
+let filterMode = 1; // for filterring of task displaing. 1 - All (displays All tasks), 2 - Active, 3 - Complited
+let doneMode = false; // used in doneAll fuction for correct sellecting
 
+// LISTENERS
 todosPages.addEventListener("click", filter);
 form.addEventListener("submit", addTask);
 taskList.addEventListener("click", deleteTask);
 taskList.addEventListener("click", doneTask);
 taskList.addEventListener("click", editTask);
 clearChecked.addEventListener("click", removeChecked);
+sellectAll.addEventListener("click", doneAll);
 
+// INITIALIZATION
 if (localStorage.getItem("tasks")) {
   tasks = JSON.parse(localStorage.getItem("tasks"));
   counter.textContent = `${tasks.length + " items"}`;
-
+  doneMode = localStorage.getItem("doneMode");
   tasks.forEach((task) => {
     render(task);
   });
 }
 
-function editTask(e) {
-  if (e.target.classList == "todo-item__edit button") {
-    const Parant = e.target.closest(".todo-item");
-    const Id = Parant.id;
-    const Text = Parant.querySelector(".todo-item__value");
-    const task = tasks.find((task) => task.id == Id);
+/**
+ * ALL FUNCTIONS
+ */
 
-    task.edit = !task.edit;
-    task.text = Text.textContent;
+// toggle marking all tasks as done or active
+function doneAll() {
+  doneMode = !doneMode;
+  localStorage.setItem("doneMode", doneMode);
+  tasks.forEach((task) => {
+    task.checked = doneMode;
+  });
 
-    saveLocal();
-    update();
-  }
+  saveLocal();
+  update();
 }
 
+// Toggle task display modes
 function filter(e) {
+  for (let i = 0; i < todosPages.childElementCount; i++) {
+    todosPages.children.item(i).classList.remove("page--active");
+  }
   switch (e.target.id) {
     case "Active":
       filterMode = 2;
+      e.target.classList.add("page--active");
+
       break;
     case "Complited":
       filterMode = 3;
+      e.target.classList.add("page--active");
+
       break;
     default:
       filterMode = 1;
+      e.target.classList.add("page--active");
+
       break;
   }
   update();
 }
 
-function update() {
-  while ((lis = taskList.getElementsByTagName("li")).length > 0) {
-    taskList.removeChild(lis[0]);
-  }
-  switch (filterMode) {
-    case 2:
-      tasks.forEach((task) => {
-        if (!task.checked) {
-          render(task);
-        }
-      });
-      break;
-    case 3:
-      tasks.forEach((task) => {
-        if (task.checked) {
-          render(task);
-        }
-      });
-      break;
-    default:
-      tasks.forEach((task) => {
-        render(task);
-      });
-      break;
-  }
-}
-
+// Adds new tasks
 function addTask(e) {
   e.preventDefault();
 
@@ -107,6 +97,64 @@ function addTask(e) {
   counter.textContent = `${tasks.length + " items"}`;
 }
 
+// Deletes selected tasks
+function deleteTask(e) {
+  if (e.target.classList == "todo-item__remove button") {
+    const item = e.target.closest(".todo-item");
+    const id = item.id;
+
+    tasks = tasks.filter((task) => task.id !== id);
+    saveLocal();
+
+    item.remove();
+    counter.textContent = `${tasks.length + " items"}`;
+  }
+}
+
+// Marked task as done
+function doneTask(e) {
+  if (e.target.classList == "todo-item__checked") {
+    const item = e.target.closest(".todo-item");
+    const id = item.id;
+    const task = tasks.find((task) => task.id == id);
+
+    task.checked = !task.checked;
+
+    saveLocal();
+    update();
+  }
+}
+
+// makes the task editable
+function editTask(e) {
+  if (e.target.classList == "todo-item__edit button") {
+    const parant = e.target.closest(".todo-item");
+    const id = parant.id;
+    const text = parant.querySelector(".todo-item__value");
+    const task = tasks.find((task) => task.id == id);
+
+    task.edit = !task.edit;
+    task.text = text.textContent;
+
+    saveLocal();
+    update();
+  }
+}
+
+// clears all completed tasks
+function removeChecked() {
+  tasks.forEach((task) => {
+    if (task.checked) {
+      taskList.querySelector(`#${task.id}`).remove();
+      tasks = tasks.filter((task) => task.checked !== true);
+    }
+  });
+
+  saveLocal();
+  counter.textContent = `${tasks.length + " items"}`;
+}
+
+// task template
 function render(task) {
   const taskEdit = task.edit
     ? "save_FILL0_wght400_GRAD0_opsz48"
@@ -141,44 +189,35 @@ function render(task) {
   taskList.insertAdjacentHTML("afterbegin", Task);
 }
 
-function deleteTask(e) {
-  if (e.target.classList == "todo-item__remove button") {
-    const Item = e.target.closest(".todo-item");
-    const Id = Item.id;
-
-    tasks = tasks.filter((task) => task.id !== Id);
-    saveLocal();
-
-    Item.remove();
-    counter.textContent = `${tasks.length + " items"}`;
+// function for rerendering all tasks desplay while something changes
+function update() {
+  while ((lis = taskList.getElementsByTagName("li")).length > 0) {
+    taskList.removeChild(lis[0]);
+  }
+  switch (filterMode) {
+    case 2:
+      tasks.forEach((task) => {
+        if (!task.checked) {
+          render(task);
+        }
+      });
+      break;
+    case 3:
+      tasks.forEach((task) => {
+        if (task.checked) {
+          render(task);
+        }
+      });
+      break;
+    default:
+      tasks.forEach((task) => {
+        render(task);
+      });
+      break;
   }
 }
 
-function doneTask(e) {
-  if (e.target.classList == "todo-item__checked") {
-    const Item = e.target.closest(".todo-item");
-    const Id = Item.id;
-    const Task = tasks.find((task) => task.id == Id);
-
-    Task.checked = !Task.checked;
-
-    saveLocal();
-    update();
-  }
-}
-
+// saves all changes in the local storage
 function saveLocal() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
-}
-
-function removeChecked() {
-  tasks.forEach((task) => {
-    if (task.checked) {
-      taskList.querySelector(`#${task.id}`).remove();
-      tasks = tasks.filter((task) => task.checked !== true);
-    }
-  });
-
-  saveLocal();
-  counter.textContent = `${tasks.length + " items"}`;
 }
