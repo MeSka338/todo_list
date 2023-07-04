@@ -10,7 +10,7 @@ const sellectAll = document.querySelector("#sellectAll");
 let tasks = []; // the list of tasks
 let taskCount; // for displayng the quantity of tasks in the list
 let filterMode = 1; // for filterring of task displaing. 1 - All (displays All tasks), 2 - Active, 3 - Complited
-let doneMode = false; // used in doneAll fuction for correct sellecting
+let doneMode = 0; // used in doneAll fuction for correct sellecting
 
 // LISTENERS
 todosPages.addEventListener("click", filter);
@@ -25,12 +25,14 @@ sellectAll.addEventListener("click", doneAll);
 if (localStorage.getItem("tasks")) {
   tasks = JSON.parse(localStorage.getItem("tasks"));
   counter.textContent = `${tasks.length + " items"}`;
-  doneMode = localStorage.getItem("doneMode");
   tasks.forEach((task) => {
     render(task);
   });
 }
 
+if (localStorage.getItem("doneMode")) {
+  doneMode = localStorage.getItem("doneMode");
+}
 /**
  * ALL FUNCTIONS
  */
@@ -38,11 +40,12 @@ if (localStorage.getItem("tasks")) {
 // toggle marking all tasks as done or active
 function doneAll() {
   doneMode = !doneMode;
-  localStorage.setItem("doneMode", doneMode);
   tasks.forEach((task) => {
     task.checked = doneMode;
   });
 
+  console.log(doneMode);
+  localStorage.setItem("doneMode", doneMode);
   saveLocal();
   update();
 }
