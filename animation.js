@@ -9,6 +9,7 @@ import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader";
 // Loaders
 const loader = new THREE.TextureLoader();
 const circle = loader.load("circle.png");
+const circleGreen = loader.load("circle-green.png");
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
 
@@ -52,10 +53,6 @@ camera.position.y = 0;
 camera.position.z = 3;
 scene.add(camera);
 
-// Controls
-// const controls = new OrbitControls(camera, canvas);
-// controls.enableDamping = true;
-
 /**
  * geometry
  */
@@ -81,6 +78,7 @@ const pointMaterial = new THREE.PointsMaterial({
 });
 const pointMesh = new THREE.Points(particlesGeometry, pointMaterial);
 scene.add(pointMesh);
+
 // 3d text
 const ttfLoader = new TTFLoader();
 const fontLoader = new FontLoader();
@@ -110,6 +108,7 @@ const renderer = new THREE.WebGLRenderer({
 renderer.setSize(sizes.width, sizes.height);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 scene.background = new THREE.Color("rgba(247,247,247,255)");
+
 /**
  * Animate
  */
@@ -128,11 +127,24 @@ window.addEventListener(
   },
   false
 );
+taskList.addEventListener("click", (e) => {
+  if (
+    e.target.classList == "fake-checked" &&
+    !e.target.closest("li").querySelector("input").checked
+  ) {
+    pointMaterial.map = circleGreen;
+  }
+});
+
+setInterval(() => {
+  pointMaterial.map = circle;
+}, 3000);
+
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
   const deltaTime = elapsedTime - lastElapsedTime;
   lastElapsedTime = elapsedTime;
-  camera.position.x += (mouse.x * 2 - camera.position.x) * 0.05;
+  camera.position.x += (mouse.x / 2 - camera.position.x) * 0.05;
   camera.position.y += (mouse.y / 2 - camera.position.y) * 0.05;
 
   camera.lookAt(0, 0, 0);
