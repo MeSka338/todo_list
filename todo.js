@@ -179,10 +179,10 @@ function render(task) {
     task.edit ? "true" : "false"
   }">${taskText}</p>
         <button class="todo-item__remove button">
-          <img src="/publick/icons/close_FILL0_wght400_GRAD0_opsz48.svg" alt="rem"></img>
+          <img src="icons/close_FILL0_wght400_GRAD0_opsz48.svg" alt="rem"></img>
         </button>
         <button class="todo-item__edit button">
-          <img src="/publick/icons/${taskEdit}.svg" alt="rem"></img>
+          <img src="icons/${taskEdit}.svg" alt="rem"></img>
         </button>
       </li>`;
 
@@ -191,6 +191,7 @@ function render(task) {
 
 // function for rerendering all tasks desplay while something changes
 function update() {
+  let lis;
   while ((lis = taskList.getElementsByTagName("li")).length > 0) {
     taskList.removeChild(lis[0]);
   }
