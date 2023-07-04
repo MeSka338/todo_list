@@ -2,6 +2,7 @@ import "./style.css";
 import * as THREE from "three";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
+import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader";
 /**
  * Three
  */
@@ -81,25 +82,24 @@ const pointMaterial = new THREE.PointsMaterial({
 const pointMesh = new THREE.Points(particlesGeometry, pointMaterial);
 scene.add(pointMesh);
 // 3d text
+const ttfLoader = new TTFLoader();
 const fontLoader = new FontLoader();
-fontLoader.load(
-  "node_modules/three/examples/fonts/droid/droid_serif_regular.typeface.json",
-  (droidFont) => {
-    const textGeometry = new TextGeometry("TODOS", {
-      height: 0.5,
-      size: 0.3,
-      font: droidFont,
-    });
-    const textMaterial = new THREE.MeshNormalMaterial();
-    const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-    textMesh.position.x = -0.8;
-    textMesh.position.y = 1.6;
-    textMesh.position.z = 0;
+ttfLoader.load("fonts/Kanit-Bold.ttf", (json) => {
+  const kanit = fontLoader.parse(json);
+  const textGeometry = new TextGeometry("TODOS", {
+    height: 0.5,
+    size: 0.3,
+    font: kanit,
+  });
+  const textMaterial = new THREE.MeshNormalMaterial();
+  const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+  textMesh.position.x = -0.8;
+  textMesh.position.y = 1.6;
+  textMesh.position.z = 0;
 
-    textMesh.lookAt(-0.7, 0, 4);
-    scene.add(textMesh);
-  }
-);
+  textMesh.lookAt(-0.7, 0, 4);
+  scene.add(textMesh);
+});
 /**
  * Renderer
  */
