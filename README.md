@@ -1,4 +1,4 @@
-# TODO APP
+# TODO LIST
 
 Для запуска запуска проекта введите в консоле:
 * npm install
