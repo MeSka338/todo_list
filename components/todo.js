@@ -30,8 +30,9 @@ if (localStorage.getItem("tasks")) {
   });
 }
 
-if (localStorage.getItem("doneMode")) {
-  doneMode = Boolean(localStorage.getItem("doneMode"));
+if (localStorage.getItem("doneMode") !== undefined) {
+  doneMode = JSON.parse(localStorage.getItem("doneMode"));
+  console.log(doneMode);
 }
 /**
  * ALL FUNCTIONS
