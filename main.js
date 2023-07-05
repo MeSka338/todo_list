@@ -1,2 +1,2 @@
-import "./todo.js";
-import "./animation.js";
+import "./components/todo";
+import "./components/animation";

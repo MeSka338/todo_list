@@ -1,15 +1,15 @@
-import "./style.css";
+import "../style.css";
+
 import * as THREE from "three";
 import { FontLoader } from "three/examples/jsm/loaders/FontLoader";
 import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader";
-/**
- * Three
- */
+
 // Loaders
 const loader = new THREE.TextureLoader();
 const circle = loader.load("circle.png");
 const circleGreen = loader.load("circle-green.png");
+
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
 
