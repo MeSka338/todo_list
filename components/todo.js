@@ -1,10 +1,10 @@
 // VARIABLES
 const Input = document.querySelector("#todosInput");
 const form = document.querySelector("#form");
-const taskList = document.querySelector("#taskList");
+const todoList = document.querySelector("#todoList");
 const counter = document.querySelector("#counter");
 const clearChecked = document.querySelector("#clearChecked");
-const todosPages = document.querySelector("#todoPages");
+const todoPages = document.querySelector("#todoPages");
 const sellectAll = document.querySelector("#sellectAll");
 
 let tasks = []; // the list of tasks
@@ -13,11 +13,11 @@ let filterMode = 1; // for filterring of task displaing. 1 - All (displays All t
 let doneMode = 0; // used in doneAll fuction for correct sellecting
 
 // LISTENERS
-todosPages.addEventListener("click", filter);
+todoPages.addEventListener("click", filter);
 form.addEventListener("submit", addTask);
-taskList.addEventListener("click", deleteTask);
-taskList.addEventListener("click", doneTask);
-taskList.addEventListener("click", editTask);
+todoList.addEventListener("click", deleteTask);
+todoList.addEventListener("click", doneTask);
+todoList.addEventListener("click", editTask);
 clearChecked.addEventListener("click", removeChecked);
 sellectAll.addEventListener("click", doneAll);
 
@@ -31,7 +31,7 @@ if (localStorage.getItem("tasks")) {
 }
 
 if (localStorage.getItem("doneMode")) {
-  doneMode = localStorage.getItem("doneMode");
+  doneMode = Boolean(localStorage.getItem("doneMode"));
 }
 /**
  * ALL FUNCTIONS
@@ -40,11 +40,12 @@ if (localStorage.getItem("doneMode")) {
 // toggle marking all tasks as done or active
 function doneAll() {
   doneMode = !doneMode;
+  console.log(doneMode);
+
   tasks.forEach((task) => {
     task.checked = doneMode;
   });
 
-  console.log(doneMode);
   localStorage.setItem("doneMode", doneMode);
   saveLocal();
   update();
@@ -52,8 +53,8 @@ function doneAll() {
 
 // Toggle task display modes
 function filter(e) {
-  for (let i = 0; i < todosPages.childElementCount; i++) {
-    todosPages.children.item(i).classList.remove("page--active");
+  for (let i = 0; i < todoPages.childElementCount; i++) {
+    todoPages.children.item(i).classList.remove("page--active");
   }
   switch (e.target.id) {
     case "Active":
@@ -148,7 +149,7 @@ function editTask(e) {
 function removeChecked() {
   tasks.forEach((task) => {
     if (task.checked) {
-      taskList.querySelector(`#${task.id}`).remove();
+      todoList.querySelector(`#${task.id}`).remove();
       tasks = tasks.filter((task) => task.checked !== true);
     }
   });
@@ -189,14 +190,14 @@ function render(task) {
         </button>
       </li>`;
 
-  taskList.insertAdjacentHTML("afterbegin", Task);
+  todoList.insertAdjacentHTML("afterbegin", Task);
 }
 
 // function for rerendering all tasks desplay while something changes
 function update() {
   let lis;
-  while ((lis = taskList.getElementsByTagName("li")).length > 0) {
-    taskList.removeChild(lis[0]);
+  while ((lis = todoList.getElementsByTagName("li")).length > 0) {
+    todoList.removeChild(lis[0]);
   }
   switch (filterMode) {
     case 2:

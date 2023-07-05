@@ -7,7 +7,7 @@ import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader";
 
 // Loaders
 const loader = new THREE.TextureLoader();
-const circle = loader.load("circle.png");
+const circle = loader.load("circle (1).png");
 const circleGreen = loader.load("circle-green.png");
 
 // Canvas
@@ -74,6 +74,8 @@ particlesGeometry.setAttribute(
 const pointMaterial = new THREE.PointsMaterial({
   scales: 0.002,
   map: circle,
+  color: "#353535",
+  blending: THREE.MultiplyBlending,
   transparent: true,
 });
 const pointMesh = new THREE.Points(particlesGeometry, pointMaterial);
@@ -127,17 +129,17 @@ window.addEventListener(
   },
   false
 );
-taskList.addEventListener("click", (e) => {
+todoList.addEventListener("click", (e) => {
   if (
     e.target.classList == "fake-checked" &&
     !e.target.closest("li").querySelector("input").checked
   ) {
-    pointMaterial.map = circleGreen;
+    pointMaterial.color = new THREE.Color("#a2f40e");
   }
 });
 
 setInterval(() => {
-  pointMaterial.map = circle;
+  pointMaterial.color = new THREE.Color("#353535");
 }, 3000);
 
 const tick = () => {
