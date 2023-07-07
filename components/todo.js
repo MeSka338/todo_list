@@ -18,7 +18,7 @@ window.addEventListener("click", (e) => {
     saveEdit();
   }
 });
-window.addEventListener("keypress", (e) => {
+todoList.addEventListener("keypress", (e) => {
   if (e.key === "Enter" && editText) {
     saveEdit();
   }
