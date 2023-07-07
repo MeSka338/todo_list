@@ -7,8 +7,7 @@ import { TTFLoader } from "three/examples/jsm/loaders/TTFLoader";
 
 // Loaders
 const loader = new THREE.TextureLoader();
-const circle = loader.load("circle (1).png");
-const circleGreen = loader.load("circle-green.png");
+const circle = loader.load("circle.png");
 
 // Canvas
 const canvas = document.querySelector("canvas.webgl");
@@ -129,22 +128,24 @@ window.addEventListener(
   },
   false
 );
+let timeout;
+
 todoList.addEventListener("click", (e) => {
   if (
-    e.target.classList == "fake-checked" &&
+    e.target.className.includes("fake-checked") &&
     !e.target.closest("li").querySelector("input").checked
   ) {
+    clearTimeout(timeout);
     pointMaterial.color = new THREE.Color("#a2f40e");
+
+    timeout = setTimeout(() => {
+      pointMaterial.color = new THREE.Color("#353535");
+    }, 3000);
   }
 });
 
-setInterval(() => {
-  pointMaterial.color = new THREE.Color("#353535");
-}, 3000);
-
 const tick = () => {
   const elapsedTime = clock.getElapsedTime();
-  const deltaTime = elapsedTime - lastElapsedTime;
   lastElapsedTime = elapsedTime;
   camera.position.x += (mouse.x / 2 - camera.position.x) * 0.05;
   camera.position.y += (mouse.y / 2 - camera.position.y) * 0.05;
