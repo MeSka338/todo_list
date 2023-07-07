@@ -15,12 +15,12 @@ let doneMode = 0; // used in doneAll fuction for correct sellecting
 // LISTENERS
 window.addEventListener("click", (e) => {
   if (editText && e.target !== editText) {
-    saveEdit(e);
+    saveEdit();
   }
 });
 window.addEventListener("keypress", (e) => {
   if (e.key === "Enter" && editText) {
-    saveEdit(e);
+    saveEdit();
   }
 });
 
@@ -146,16 +146,25 @@ let editText;
 function editTask(e) {
   if ([...e.target.classList].includes("todo-item__value")) {
     editText = e.target;
-    e.target.setAttribute("contenteditable", "true");
 
+    const Parent = editText.closest(".todo-item");
+    const checkbox = Parent.querySelector(".fake-checked");
+    const deleteBtn = Parent.querySelector(".todo-item__remove");
+
+    e.target.setAttribute("contenteditable", "true");
+    checkbox.style.display = "none";
+    deleteBtn.style.display = "none";
+    editText.classList.remove("todo-item__value--checked");
     saveLocal();
   }
 }
 
 // saves the edit and makes the task noneditable
-function saveEdit(e) {
+function saveEdit() {
+  const Parent = editText.closest(".todo-item");
+  const Id = Parent.id;
+
   editText.removeAttribute("contenteditable");
-  const Id = editText.closest(".todo-item").id;
 
   tasks.forEach((task) => {
     if (task.id === Id) {
@@ -166,6 +175,7 @@ function saveEdit(e) {
   editText = null;
 
   saveLocal();
+  update();
 }
 
 // clears all completed tasks
