@@ -128,8 +128,8 @@ window.addEventListener(
   },
   false
 );
-let timeout;
 
+let timeout;
 todoList.addEventListener("click", (e) => {
   if (
     e.target.className.includes("fake-checked") &&
