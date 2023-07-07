@@ -126,15 +126,11 @@ body {
 }
 
 .todo-form__sellectAll {
-  width: 30px;
   margin-left: 15px;
-  border: none;
-  background: white;
   position: absolute;
   z-index: 2;
   top: 50%;
   transform: translateY(-50%);
-  cursor: pointer;
 }
 
 .todo-form__sellectAll img {
