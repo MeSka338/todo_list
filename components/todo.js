@@ -13,11 +13,22 @@ let filterMode = 1; // for filterring of task displaing. 1 - All (displays All t
 let doneMode = 0; // used in doneAll fuction for correct sellecting
 
 // LISTENERS
+window.addEventListener("click", (e) => {
+  if (editText && e.target !== editText) {
+    saveEdit(e);
+  }
+});
+window.addEventListener("keypress", (e) => {
+  if (e.key === "Enter" && editText) {
+    saveEdit(e);
+  }
+});
+
 todoPages.addEventListener("click", filter);
 form.addEventListener("submit", addTask);
 todoList.addEventListener("click", deleteTask);
 todoList.addEventListener("click", doneTask);
-todoList.addEventListener("click", editTask);
+todoList.addEventListener("dblclick", editTask);
 clearChecked.addEventListener("click", removeChecked);
 sellectAll.addEventListener("click", doneAll);
 
@@ -104,7 +115,7 @@ function addTask(e) {
 
 // Deletes selected tasks
 function deleteTask(e) {
-  if (e.target.classList == "todo-item__remove button") {
+  if ([...e.target.classList].includes("todo-item__remove")) {
     const item = e.target.closest(".todo-item");
     const id = item.id;
 
@@ -118,7 +129,7 @@ function deleteTask(e) {
 
 // Marked task as done
 function doneTask(e) {
-  if (e.target.classList == "todo-item__checked") {
+  if ([...e.target.classList].includes("todo-item__checked")) {
     const item = e.target.closest(".todo-item");
     const id = item.id;
     const task = tasks.find((task) => task.id == id);
@@ -131,19 +142,30 @@ function doneTask(e) {
 }
 
 // makes the task editable
+let editText;
 function editTask(e) {
-  if (e.target.classList == "todo-item__edit button") {
-    const parant = e.target.closest(".todo-item");
-    const id = parant.id;
-    const text = parant.querySelector(".todo-item__value");
-    const task = tasks.find((task) => task.id == id);
-
-    task.edit = !task.edit;
-    task.text = text.textContent;
+  if ([...e.target.classList].includes("todo-item__value")) {
+    editText = e.target;
+    e.target.setAttribute("contenteditable", "true");
 
     saveLocal();
-    update();
   }
+}
+
+// saves the edit and makes the task noneditable
+function saveEdit(e) {
+  editText.removeAttribute("contenteditable");
+  const Id = editText.closest(".todo-item").id;
+
+  tasks.forEach((task) => {
+    if (task.id === Id) {
+      task.text = editText.textContent;
+    }
+  });
+
+  editText = null;
+
+  saveLocal();
 }
 
 // clears all completed tasks
@@ -161,10 +183,6 @@ function removeChecked() {
 
 // task template
 function render(task) {
-  const taskEdit = task.edit
-    ? "save_FILL0_wght400_GRAD0_opsz48"
-    : "edit_FILL0_wght400_GRAD0_opsz48";
-
   const taskText = task.text;
 
   const textCss = task.checked
@@ -180,15 +198,11 @@ function render(task) {
           ${task.checked ? "checked" : ""}
         />
         <label for=${"checked" + task.id}  class="fake-checked"></label>
-        <p class=${textCss} contenteditable="${
-    task.edit ? "true" : "false"
+        <p class=${textCss} 
   }">${taskText}</p>
         <button class="todo-item__remove button">
-          <img src="icons/close_FILL0_wght400_GRAD0_opsz48.svg" alt="rem"></img>
-        </button>
-        <button class="todo-item__edit button">
-          <img src="icons/${taskEdit}.svg" alt="rem"></img>
-        </button>
+          <img src="icons/close.svg" alt="rem"></img>
+
       </li>`;
 
   todoList.insertAdjacentHTML("afterbegin", Task);
