@@ -112,6 +112,9 @@ body {
 
 .todo-item__value:focus {
   outline: none;
+}
+
+.focus:focus {
   border: 1px solid #5dc2af;
 }
 
