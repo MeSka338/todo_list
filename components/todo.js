@@ -164,17 +164,21 @@ function editTask(e) {
 function saveEdit() {
   const Parent = editText.closest(".todo-item");
   const Id = Parent.id;
-
-  tasks.forEach((task) => {
-    if (task.id === Id) {
-      task.text = editText.value;
-    }
-  });
+  if (editText.value !== "") {
+    tasks.forEach((task) => {
+      if (task.id === Id) {
+        task.text = editText.value;
+      }
+    });
+  } else {
+    tasks = tasks.filter((task) => task.id !== Id);
+    counter.textContent = `${tasks.length + " items"}`;
+  }
 
   editText = null;
 
-  saveLocal();
   update();
+  saveLocal();
 }
 
 // clears all completed tasks
@@ -207,7 +211,7 @@ function render(task) {
           ${task.checked ? "checked" : ""}
         />
         <label for=${"checked" + task.id}  class="fake-checked"></label>
-        <input type="text" class=${textCss} value=${taskText} readonly
+        <input type="text" class=${textCss}  readonly value="${taskText}"
   ></input>
         <button class="todo-item__remove button">
           <img src="icons/close.svg" alt="rem"></img>
