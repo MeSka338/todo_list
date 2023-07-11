@@ -146,12 +146,13 @@ let editText;
 function editTask(e) {
   if ([...e.target.classList].includes("todo-item__value")) {
     editText = e.target;
+    editText.classList.add("focus");
 
     const Parent = editText.closest(".todo-item");
     const checkbox = Parent.querySelector(".fake-checked");
     const deleteBtn = Parent.querySelector(".todo-item__remove");
 
-    e.target.setAttribute("contenteditable", "true");
+    e.target.removeAttribute("readonly");
     checkbox.style.display = "none";
     deleteBtn.style.display = "none";
     editText.classList.remove("todo-item__value--checked");
@@ -164,11 +165,9 @@ function saveEdit() {
   const Parent = editText.closest(".todo-item");
   const Id = Parent.id;
 
-  editText.removeAttribute("contenteditable");
-
   tasks.forEach((task) => {
     if (task.id === Id) {
-      task.text = editText.textContent;
+      task.text = editText.value;
     }
   });
 
@@ -208,8 +207,8 @@ function render(task) {
           ${task.checked ? "checked" : ""}
         />
         <label for=${"checked" + task.id}  class="fake-checked"></label>
-        <p class=${textCss} 
-  }">${taskText}</p>
+        <input type="text" class=${textCss} value=${taskText} readonly
+  ></input>
         <button class="todo-item__remove button">
           <img src="icons/close.svg" alt="rem"></img>
 
