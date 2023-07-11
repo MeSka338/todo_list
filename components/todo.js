@@ -8,7 +8,6 @@ const todoPages = document.querySelector("#todoPages");
 const sellectAll = document.querySelector("#sellectAll");
 
 let tasks = []; // the list of tasks
-let taskCount; // for displayng the quantity of tasks in the list
 let filterMode = 1; // for filterring of task displaing. 1 - All (displays All tasks), 2 - Active, 3 - Complited
 let doneMode = 0; // used in doneAll fuction for correct sellecting
 
